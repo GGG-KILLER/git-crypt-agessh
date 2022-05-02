@@ -51,6 +51,10 @@ git restore encrypted_file
 
 When you run `git restore`, the filters should now be recognized, and the restored file will be decrypted.
 
+### 💡 Tip
+
+If you want a little extra peace of mind while using this, consider initializing with `git-crypt-agessh init -v`; using the verbose flag will configure `git-crypt-agessh` so that it prints info messages whenever `clean` and `smudge` are invoked.
+
 ## Related
 
 - [vlaci/git-agecrypt](https://github.com/vlaci/git-agecrypt)
