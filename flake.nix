@@ -18,8 +18,8 @@
             vendorSha256 = "kxPxzVsn3bm5FNXFirEjUT5Sq/SLs+anhDBeyX63Vj0=";
           };
 
-          devShell = mkShell { nativeBuildInputs = [ go gopls ]; };
+          devShells.default = mkShell { nativeBuildInputs = [ go gopls ]; };
         }) // {
-      overlay = (final: _: { git-crypt-agessh = self.packages."${final.system}".default; });
+      overlays.default = (final: _: { git-crypt-agessh = self.packages."${final.system}".default; });
     };
 }
