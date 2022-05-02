@@ -25,8 +25,8 @@ import (
 )
 
 // NOTE: the Path argument for smudge and clean are just for additional
-// information, the file might not actually exist. the actual text gets passed
-// is provided via stdin
+// information, the file might not actually exist, and the actual text gets
+// passed via stdin
 
 var CLI struct {
 	Init struct {
