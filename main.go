@@ -113,6 +113,16 @@ func main() {
 			}
 		}
 
+		// PERF: rework things so buffers are used as sparingly as possible, since
+		// this requires loading entire files into memory
+
+		// also copy the stdin to a buffer
+		stdinBuf := &bytes.Buffer{}
+		_, err = io.Copy(stdinBuf, os.Stdin)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
 		if !headless {
 			wt, err := repo.Worktree()
 			if err != nil {
@@ -149,13 +159,6 @@ func main() {
 
 				headBuf := &bytes.Buffer{}
 				_, err = io.Copy(headBuf, r)
-				if err != nil {
-					log.Fatalln(err)
-				}
-
-				// also copy the stdin to a buffer
-				stdinBuf := &bytes.Buffer{}
-				_, err = io.Copy(stdinBuf, os.Stdin)
 				if err != nil {
 					log.Fatalln(err)
 				}
@@ -281,7 +284,7 @@ func main() {
 			}
 		}()
 
-		_, err = io.Copy(w, os.Stdin)
+		_, err = io.Copy(w, stdinBuf)
 		if err != nil {
 			log.Fatalln(err)
 		}

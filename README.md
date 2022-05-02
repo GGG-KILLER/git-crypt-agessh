@@ -4,7 +4,7 @@ Encrypt files in git using [age](https://age-encryption.org/) and ed25519 ssh ke
 
 ## Security First!
 
-**I have literally no idea if this is secure, I'm not a security expert, use at your own risk**. I'm only using this to encrypt security-by-obscurity type details in [mtoohey31/infra](https://github.com/mtoohey31/infra) such as usernames, port numbers, public keys, and ip addresses, **but not** important things like passwords or private keys.
+**I have literally no idea if this is secure, I'm not a security expert, use at your own risk**. In addition to being questionably secure, it's also very untested, so it may have bugs that could result in data loss. 'm only using this to encrypt security-by-obscurity type details in [mtoohey31/infra](https://github.com/mtoohey31/infra) such as usernames, port numbers, public keys, and ip addresses, **but not** important things like passwords or private keys.
 
 ## Usage
 
