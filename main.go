@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -29,14 +30,17 @@ import (
 
 var CLI struct {
 	Init struct {
+		Verbose bool `help:"Install filters with verbose flags" short:"v"`
 	} `cmd:"" help:"Install git-crypt-agessh configuration in the current repository"`
 	DeInit struct {
 	} `cmd:"" help:"Remove git-crypt-agessh configuration from the current repository"`
 	Smudge struct {
-		Path string `arg:"" name:"path" help:"Path to smudge" type:"path"`
+		Path    string `arg:"" name:"path" help:"Path to smudge" type:"path"`
+		Verbose bool   `help:"Output additional info to stderr" short:"v"`
 	} `cmd:"" help:"Smudge (decrypt) files" hidden:""`
 	Clean struct {
-		Path string `arg:"" name:"path" help:"Path to clean" type:"path"`
+		Path    string `arg:"" name:"path" help:"Path to clean" type:"path"`
+		Verbose bool   `help:"Output additional info to stderr" short:"v"`
 	} `cmd:"" help:"Clean (encrypt) files" hidden:""`
 	Textconv struct {
 		Path string `arg:"" name:"path" help:"Path to convert" type:"path"`
@@ -57,8 +61,13 @@ func main() {
 
 		// add the options to the config
 		cfg.Raw.AddOption("filter", "git-crypt-agessh", "required", "true")
-		cfg.Raw.AddOption("filter", "git-crypt-agessh", "smudge", "git-crypt-agessh smudge %f")
-		cfg.Raw.AddOption("filter", "git-crypt-agessh", "clean", "git-crypt-agessh clean %f")
+		if CLI.Init.Verbose {
+			cfg.Raw.AddOption("filter", "git-crypt-agessh", "smudge", "git-crypt-agessh smudge -v %f")
+			cfg.Raw.AddOption("filter", "git-crypt-agessh", "clean", "git-crypt-agessh clean -v %f")
+		} else {
+			cfg.Raw.AddOption("filter", "git-crypt-agessh", "smudge", "git-crypt-agessh smudge %f")
+			cfg.Raw.AddOption("filter", "git-crypt-agessh", "clean", "git-crypt-agessh clean %f")
+		}
 		cfg.Raw.AddOption("diff", "git-crypt-agessh", "textconv", "git-crypt-agessh textconv")
 
 		saveCfg(cfg, cfgPath)
@@ -167,6 +176,10 @@ func main() {
 					}
 				}
 
+				if CLI.Clean.Verbose {
+					fmt.Fprintf(os.Stderr, "git-crypt-agessh: no changes found while cleaning %s\n", relPath)
+				}
+
 				// ...we just reuse the old version
 				if noChanges {
 					_, err = f.Seek(0, 0)
@@ -182,6 +195,10 @@ func main() {
 					return
 				}
 			}
+		}
+
+		if CLI.Clean.Verbose {
+			fmt.Fprintf(os.Stderr, "git-crypt-agessh: found changes while cleaning %s\n", relPath)
 		}
 
 		// if we're going to have to encrypt it, we need to look for .gitattributes
@@ -269,6 +286,10 @@ func main() {
 			log.Fatalln(err)
 		}
 	case "smudge <path>":
+		if CLI.Smudge.Verbose {
+			fmt.Fprintf(os.Stderr, "git-crypt-agessh: smudging %s\n", CLI.Smudge.Path)
+		}
+
 		id := getIdentity()
 
 		// decrypt stdin and send it to stdout
