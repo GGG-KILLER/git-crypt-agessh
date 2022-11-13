@@ -1,3 +1,5 @@
+> Archived in favour of running sops directly for smudge and a bash script for clean. See [this commit](https://github.com/mtoohey31/infra/commit/dbd8ae8cec917c09834c0ece96827ded9ff0748b) for details. **This tool should not be used. I will be deleting this repository soon.**
+
 # git-crypt-agessh
 
 Encrypt files in git using [age](https://age-encryption.org/) and ed25519 ssh keys.
