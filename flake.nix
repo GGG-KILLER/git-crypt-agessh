@@ -15,7 +15,7 @@
             name = pname;
             version = "0.1.0";
             src = ./.;
-            vendorSha256 = "kxPxzVsn3bm5FNXFirEjUT5Sq/SLs+anhDBeyX63Vj0=";
+            vendorHash = "sha256-kxPxzVsn3bm5FNXFirEjUT5Sq/SLs+anhDBeyX63Vj0=";
           };
 
           devShells.default = mkShell { nativeBuildInputs = [ go gopls ]; };
